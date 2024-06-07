@@ -1,5 +1,10 @@
 #pragma once
+#include <vector>
 #include "BaseGame.h"
+#include "Block.h"
+#include <utils.h>
+#include <Texture.h>
+
 class Game : public BaseGame
 {
 public:
@@ -22,7 +27,13 @@ public:
 	void ProcessMouseUpEvent( const SDL_MouseButtonEvent& e ) override;
 
 private:
-
+	// DATE MEMBERS
+	const int BOARDSIZED{ 4 };
+	int m_direction{ 4 };
+	bool m_GameWon{ };
+	bool m_GameLost{ };
+	bool m_Restart{};
+	Block* m_FieldBlocks[4][4];
 	// FUNCTIONS
 	void Initialize();
 	void Cleanup( );
