@@ -19,15 +19,15 @@ Game::~Game( )
 
 void Game::Initialize( )
 {
-		for (int collumns = 0; collumns < 4; collumns++)
+		for (int collumns = 0; collumns < BOARDSIZED; collumns++)
 		{
-	for (int rows = 0; rows < 4; rows++)
+	for (int rows = 0; rows < BOARDSIZED; rows++)
 	{
 			m_FieldBlocks[rows][collumns] = new Block{ true ,collumns,rows };
 		}
 	}
-	const int randomA = rand() % 4;
-	const int randomB = rand() % 4;
+	const int randomA = rand() % BOARDSIZED;
+	const int randomB = rand() % BOARDSIZED;
 
 	delete m_FieldBlocks[randomA][randomB];
 	m_FieldBlocks[randomA][randomB] = new Block{ randomB ,randomA };
@@ -39,9 +39,9 @@ void Game::Initialize( )
 void Game::Cleanup( )
 {
 
-		for (int collumns = 0; collumns < 4; collumns++)
+		for (int collumns = 0; collumns < BOARDSIZED; collumns++)
 		{
-	for (int rows = 0; rows < 4; rows++)
+	for (int rows = 0; rows < BOARDSIZED; rows++)
 	{
 			delete m_FieldBlocks[rows][collumns];
 		}
@@ -54,19 +54,19 @@ void Game::Update( float elapsedSec )
 	{
 		std::cout << "UP";
 
-		for (int movesA = 0; movesA < 3; movesA++)
+		for (int movesA = 0; movesA < BOARDSIZED-1; movesA++)
 		{
-			for (int moves = 0; moves < 3; moves++)
+			for (int moves = 0; moves < BOARDSIZED-1; moves++)
 			{
 
-				for (int collums = 0; collums < 4; collums++)
+				for (int collums = 0; collums < BOARDSIZED; collums++)
 				{
-					for (int rows = 2; rows >= 0; rows--)
+					for (int rows = BOARDSIZED-2; rows >= 0; rows--)
 					{
 						if (!m_FieldBlocks[rows][collums]->CheckEmpty() && m_FieldBlocks[rows + 1][collums]->CheckEmpty())
 						{
 							delete m_FieldBlocks[rows + 1][collums];
-							m_FieldBlocks[rows + 1][collums] = new Block{ collums,rows + 1,m_FieldBlocks[rows][collums]->CheckValue() };
+							m_FieldBlocks[rows + 1][collums] = new Block{ collums,rows + 1,m_FieldBlocks[rows][collums]->CheckValue() ,m_FieldBlocks[rows][collums]->CheckColor() };
 							delete m_FieldBlocks[rows][collums];
 							m_FieldBlocks[rows][collums] = new Block{ true,collums,rows };
 						}
@@ -74,14 +74,14 @@ void Game::Update( float elapsedSec )
 				}
 			}
 
-			for (int moves = 0; moves < 3; moves++)
+			for (int moves = 0; moves < BOARDSIZED-1; moves++)
 			{
 
-				for (int collums = 0; collums < 4; collums++)
+				for (int collums = 0; collums < BOARDSIZED; collums++)
 				{
-					for (int rows = 2; rows >= 0; rows--)
+					for (int rows = BOARDSIZED-2; rows >= 0; rows--)
 					{
-						if (!m_FieldBlocks[rows][collums]->CheckEmpty() && !m_FieldBlocks[rows + 1][collums]->CheckEmpty() && m_FieldBlocks[rows][collums]->CheckValue() == m_FieldBlocks[rows + 1][collums]->CheckValue())
+						if (!m_FieldBlocks[rows][collums]->CheckEmpty() && !m_FieldBlocks[rows + 1][collums]->CheckEmpty() && m_FieldBlocks[rows][collums]->CheckValue() == m_FieldBlocks[rows + 1][collums]->CheckValue() && m_FieldBlocks[rows][collums]->CheckColor() == m_FieldBlocks[rows + 1][collums]->CheckColor())
 						{
 							m_FieldBlocks[rows + 1][collums]->IncreaseBlock();
 							delete m_FieldBlocks[rows][collums];
@@ -93,37 +93,24 @@ void Game::Update( float elapsedSec )
 		}
 
 
-		/*
-		for (int rows = 0; rows < 4; rows++)
-		{
-			for (int collumns = 0; collumns < 4; collumns++)
-			{
-				if (rows == 2 && !m_FieldBlocks[collumns][2]->CheckEmpty() && m_FieldBlocks[collumns][3]->CheckEmpty())
-				{
-					m_FieldBlocks[collumns][3] = m_FieldBlocks[collumns][2];
-					m_FieldBlocks[collumns][2] = new Block{ true,collumns,2 };
-				}
-			}
-		}
-		*/
 	}
 	if (m_direction == 1)
 	{
 		std::cout << "RIGHT";
 
-		for (int movesA = 0; movesA < 3; movesA++)
+		for (int movesA = 0; movesA < BOARDSIZED-1; movesA++)
 		{
-			for (int moves = 0; moves < 3; moves++)
+			for (int moves = 0; moves < BOARDSIZED-1; moves++)
 			{
 
-				for (int collums = 2; collums >= 0; collums--)
+				for (int collums = BOARDSIZED-2; collums >= 0; collums--)
 				{
-					for (int rows = 0; rows < 4; rows++)
+					for (int rows = 0; rows < BOARDSIZED; rows++)
 					{
 						if (!m_FieldBlocks[rows][collums]->CheckEmpty() && m_FieldBlocks[rows][collums + 1]->CheckEmpty())
 						{
 							delete m_FieldBlocks[rows][collums + 1];
-							m_FieldBlocks[rows][collums + 1] = new Block{ collums + 1,rows,m_FieldBlocks[rows][collums]->CheckValue() };
+							m_FieldBlocks[rows][collums + 1] = new Block{ collums + 1,rows,m_FieldBlocks[rows][collums]->CheckValue() ,m_FieldBlocks[rows][collums]->CheckColor() };
 							delete m_FieldBlocks[rows][collums];
 							m_FieldBlocks[rows][collums] = new Block{ true,collums,rows };
 						}
@@ -131,14 +118,14 @@ void Game::Update( float elapsedSec )
 					}
 				}
 			}
-			for (int moves = 0; moves < 3; moves++)
+			for (int moves = 0; moves < BOARDSIZED-1; moves++)
 			{
 
-				for (int collums = 2; collums >= 0; collums--)
+				for (int collums = BOARDSIZED-2; collums >= 0; collums--)
 				{
-					for (int rows = 0; rows < 4; rows++)
+					for (int rows = 0; rows < BOARDSIZED; rows++)
 					{
-						if (!m_FieldBlocks[rows][collums]->CheckEmpty() && !m_FieldBlocks[rows][collums + 1]->CheckEmpty() && m_FieldBlocks[rows][collums]->CheckValue() == m_FieldBlocks[rows][collums + 1]->CheckValue())
+						if (!m_FieldBlocks[rows][collums]->CheckEmpty() && !m_FieldBlocks[rows][collums + 1]->CheckEmpty() && m_FieldBlocks[rows][collums]->CheckValue() == m_FieldBlocks[rows][collums + 1]->CheckValue() && m_FieldBlocks[rows][collums]->CheckColor() == m_FieldBlocks[rows][collums+1]->CheckColor())
 						{
 							m_FieldBlocks[rows][collums + 1]->IncreaseBlock();
 							delete m_FieldBlocks[rows][collums];
@@ -153,19 +140,19 @@ void Game::Update( float elapsedSec )
 	{
 		std::cout << "LEFT";
 
-		for (int movesA = 0; movesA < 3; movesA++)
+		for (int movesA = 0; movesA < BOARDSIZED-1; movesA++)
 		{
-			for (int moves = 0; moves < 3; moves++)
+			for (int moves = 0; moves < BOARDSIZED-1; moves++)
 			{
 
-				for (int collums = 1; collums <= 3; collums++)
+				for (int collums = 1; collums <= BOARDSIZED-1; collums++)
 				{
-					for (int rows = 0; rows < 4; rows++)
+					for (int rows = 0; rows < BOARDSIZED; rows++)
 					{
 						if (!m_FieldBlocks[rows][collums]->CheckEmpty() && m_FieldBlocks[rows][collums - 1]->CheckEmpty())
 						{
 							delete m_FieldBlocks[rows][collums - 1];
-							m_FieldBlocks[rows][collums - 1] = new Block{ collums - 1,rows,m_FieldBlocks[rows][collums]->CheckValue() };
+							m_FieldBlocks[rows][collums - 1] = new Block{ collums - 1,rows,m_FieldBlocks[rows][collums]->CheckValue(),m_FieldBlocks[rows][collums]->CheckColor() };
 							delete m_FieldBlocks[rows][collums];
 							m_FieldBlocks[rows][collums] = new Block{ true,collums,rows };
 						}
@@ -173,14 +160,14 @@ void Game::Update( float elapsedSec )
 				}
 			}
 
-			for (int moves = 0; moves < 3; moves++)
+			for (int moves = 0; moves < BOARDSIZED-1; moves++)
 			{
 
-				for (int collums = 1; collums <= 3; collums++)
+				for (int collums = 1; collums <= BOARDSIZED-1; collums++)
 				{
-					for (int rows = 0; rows < 4; rows++)
+					for (int rows = 0; rows < BOARDSIZED; rows++)
 					{
-						if (!m_FieldBlocks[rows][collums]->CheckEmpty() && !m_FieldBlocks[rows][collums - 1]->CheckEmpty() && m_FieldBlocks[rows][collums]->CheckValue() == m_FieldBlocks[rows][collums - 1]->CheckValue())
+						if (!m_FieldBlocks[rows][collums]->CheckEmpty() && !m_FieldBlocks[rows][collums - 1]->CheckEmpty() && m_FieldBlocks[rows][collums]->CheckValue() == m_FieldBlocks[rows][collums - 1]->CheckValue() && m_FieldBlocks[rows][collums]->CheckColor() == m_FieldBlocks[rows][collums - 1]->CheckColor())
 						{
 							m_FieldBlocks[rows][collums - 1]->IncreaseBlock();
 							delete m_FieldBlocks[rows][collums];
@@ -195,17 +182,17 @@ void Game::Update( float elapsedSec )
 	{
 		std::cout << "DOWN";
 
-		for (int moves = 0; moves < 3; moves++)
+		for (int moves = 0; moves < BOARDSIZED-1; moves++)
 		{
 
-			for (int collums = 0; collums < 4; collums++)
+			for (int collums = 0; collums < BOARDSIZED; collums++)
 			{
-				for (int rows = 1; rows <= 3; rows++)
+				for (int rows = 1; rows <= BOARDSIZED-1; rows++)
 				{
 					if (!m_FieldBlocks[rows][collums]->CheckEmpty() && m_FieldBlocks[rows - 1][collums]->CheckEmpty())
 					{
 						delete m_FieldBlocks[rows - 1][collums];
-						m_FieldBlocks[rows - 1][collums] = new Block{ collums,rows - 1,m_FieldBlocks[rows][collums]->CheckValue() };
+						m_FieldBlocks[rows - 1][collums] = new Block{ collums,rows - 1,m_FieldBlocks[rows][collums]->CheckValue(),m_FieldBlocks[rows][collums]->CheckColor()};
 						delete m_FieldBlocks[rows][collums];
 						m_FieldBlocks[rows][collums] = new Block{ true,collums,rows };
 					}
@@ -213,14 +200,14 @@ void Game::Update( float elapsedSec )
 			}
 		}
 
-		for (int moves = 0; moves < 3; moves++)
+		for (int moves = 0; moves < BOARDSIZED-1; moves++)
 		{
 
-			for (int collums = 0; collums < 4; collums++)
+			for (int collums = 0; collums < BOARDSIZED; collums++)
 			{
-				for (int rows = 1; rows <= 3; rows++)
+				for (int rows = 1; rows <= BOARDSIZED-1; rows++)
 				{
-					if (!m_FieldBlocks[rows][collums]->CheckEmpty() && !m_FieldBlocks[rows - 1][collums]->CheckEmpty() && m_FieldBlocks[rows][collums]->CheckValue() == m_FieldBlocks[rows - 1][collums]->CheckValue())
+					if (!m_FieldBlocks[rows][collums]->CheckEmpty() && !m_FieldBlocks[rows - 1][collums]->CheckEmpty() && m_FieldBlocks[rows][collums]->CheckValue() == m_FieldBlocks[rows - 1][collums]->CheckValue() && m_FieldBlocks[rows][collums]->CheckColor() == m_FieldBlocks[rows - 1][collums]->CheckColor())
 					{
 						m_FieldBlocks[rows - 1][collums]->IncreaseBlock();
 						delete m_FieldBlocks[rows][collums];
@@ -230,17 +217,18 @@ void Game::Update( float elapsedSec )
 			}
 		}
 	}
+	
 	int emptySquares = 0;
 	
-		for (int collumns = 0; collumns < 4; collumns++)
+		for (int collumns = 0; collumns < BOARDSIZED; collumns++)
 		{
-	for (int rows = 0; rows < 4; rows++)
+	for (int rows = 0; rows < BOARDSIZED; rows++)
 	{
 			if (m_FieldBlocks[rows][collumns]->CheckEmpty())
 			{
 				emptySquares++;
 			}
-			if (m_FieldBlocks[rows][collumns]->CheckValue() == 10)
+			if (m_FieldBlocks[rows][collumns]->CheckValue() == 5)
 			{
 				m_GameWon = true;
 			}
@@ -252,12 +240,12 @@ void Game::Update( float elapsedSec )
 	}
 	if (emptySquares > 0 && m_direction != 4)
 	{
-	int randomA = rand() % 4;
-	int randomB = rand() % 4;
+	int randomA = rand() % BOARDSIZED;
+	int randomB = rand() % BOARDSIZED;
 	do
 	{
-		randomA = rand() % 4;
-		randomB = rand() % 4;
+		randomA = rand() % BOARDSIZED;
+		randomB = rand() % BOARDSIZED;
 
 	} while (!m_FieldBlocks[randomA][randomB]->CheckEmpty());
 
@@ -282,6 +270,7 @@ void Game::Update( float elapsedSec )
 		Initialize();
 		m_Restart = false;
 	}
+	//*/ 
 }
 
 void Game::Draw( ) const
@@ -290,9 +279,9 @@ void Game::Draw( ) const
 	utils::FillRect(Rectf{ 20,20,740,740 });
 	glColor4f(0.4, 0.9, 0.4, 1);
 	utils::FillRect(Rectf{ 40,40,700,700 });
-		for (int collumns = 0; collumns < 4; collumns++)
+		for (int collumns = 0; collumns < BOARDSIZED; collumns++)
 		{
-	for (int rows = 0; rows < 4; rows++)
+	for (int rows = 0; rows < BOARDSIZED; rows++)
 	{
 			m_FieldBlocks[rows][collumns]->Draw();
 		}

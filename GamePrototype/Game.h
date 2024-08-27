@@ -28,12 +28,13 @@ public:
 
 private:
 	// DATE MEMBERS
-	const int BOARDSIZED{ 4 };
+	const int BOARDSIZED{ 6 };
 	int m_direction{ 4 };
 	bool m_GameWon{ };
 	bool m_GameLost{ };
 	bool m_Restart{};
-	Block* m_FieldBlocks[4][4];
+	Block* m_FieldBlocks[6][6];
+	
 	// FUNCTIONS
 	void Initialize();
 	void Cleanup( );

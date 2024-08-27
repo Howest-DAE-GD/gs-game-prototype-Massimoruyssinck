@@ -5,10 +5,11 @@ class Block
 public:
 	Block();
 	Block(int posX, int posY);
-	Block(int posX, int posY, int value);
+	Block(int posX, int posY, int value, int color);
 	Block( bool empty, int posX, int posY);
 	 void Draw() const;
-	int CheckValue();
+	 int CheckValue();
+	 int CheckColor();
 	bool CheckEmpty();
 	void IncreaseBlock();
 	
@@ -17,4 +18,5 @@ protected:
 	int m_Value;
 	int m_PosX;
 	int m_PosY;
+	int m_Color;
 };
